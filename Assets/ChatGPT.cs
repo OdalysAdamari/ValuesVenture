@@ -28,7 +28,7 @@ namespace chatgpt
                 var requestBody = new
                 {
                     prompt = message,
-                    max_tokens = 50,
+                    max_tokens = 3000,
                     temperature = 0.7,
                     model = "text-davinci-003"
                 };
@@ -36,7 +36,6 @@ namespace chatgpt
                 var json = JsonConvert.SerializeObject(requestBody);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                Thread.Sleep(5000);
                 var response = await client.PostAsync(apiUrl, content);
                 response.EnsureSuccessStatusCode();
 

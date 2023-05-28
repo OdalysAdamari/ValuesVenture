@@ -11,31 +11,48 @@ namespace chatgpt
         [SerializeField] TMP_Text gameResponse;
         // Start is called before the first frame update
 
+        const string apiKey = "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";
+
+        string firstApproach = "Vamos a crear una historia en partes. Tu seras el narrador que decida las consecuencias de las acciones de mi personajes. La creacion de la historia sera separada por lo que no necesitas adelantar ninguna parte de ella, la siguiente vez que te contacte te enviare lo que ya se sabe de la historia para continuar donde estaba.\r\nA partir de lo siguiente comenzara la historia. Primero deberas crear un entorno inicial donde exista una problematica principal sobre la inseguridad.";
+        string history = "";
+
+        public void Start()
+        {
+            retrieveContext();
+        }
+
+        public async void retrieveContext()
+        {
+            ChatGPT chatbot = new ChatGPT(apiKey);
+
+            string response = await chatbot.GenerateResponse(firstApproach);
+
+            history += "ChatGPT: " + response + '\n';
+
+            gameResponse.text = response;
+        }
 
         public async void GetAnswer()
         {
             #region conexionAPI
 
-            string apiKey = "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";
+            
             ChatGPT chatbot = new ChatGPT(apiKey);
 
             #endregion
 
             string userMessage = "";
-
+            
 
             //Console.Write("Usuario: ");
             //string userMessage = Console.ReadLine();
 
-            userMessage = userAnswer.text;
+            history += '\n' + "Usuario: " + userAnswer.text + '\n';
 
-            //userMessage += "Usuario: " + userMessage + Environment.NewLine;
-
-            string response = await chatbot.GenerateResponse(userMessage);
+            string response = await chatbot.GenerateResponse(history);
 
 
-
-            //userMessage += "ChatGPT: " + response + Environment.NewLine;
+            history += "ChatGPT: " + response + '\n';
 
             //Console.WriteLine("ChatGPT: " + response);
 
